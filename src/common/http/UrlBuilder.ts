@@ -1,60 +1,81 @@
-import type { QueryParams } from './QueryParams';
+import { TomasLogger } from "@tomasjs/logging";
+import type { QueryParams } from "./QueryParams";
 
 export class UrlBuilder {
-	private readonly pathParts: string[] = [];
-	private readonly query = new URLSearchParams();
+  private readonly pathParts: string[] = [];
+  private readonly query = new URLSearchParams();
+  private readonly logger = new TomasLogger(UrlBuilder.name, "error");
 
-	constructor(readonly baseUrl: string) {
-		this.pathParts.push(baseUrl);
-	}
+  constructor(readonly baseUrl: string) {
+    this.logger.debug(`baseUrl: ${baseUrl}`);
 
-	withPath(path: string | undefined): UrlBuilder {
-		if (path === undefined || path.trim().length === 0) {
-			return this;
-		}
+    if (baseUrl.endsWith("/")) {
+      const normalizedBaseUrl = this.removeLastCharacter(baseUrl);
+      this.pathParts.push(normalizedBaseUrl);
+    } else {
+      this.pathParts.push(baseUrl);
+    }
+  }
 
-		if (path.trim() === '/') {
-			return this;
-		}
+  withPath(path: string | undefined): UrlBuilder {
+    this.logger.debug(`withPath: ${path}`);
 
-		if (path.startsWith('/')) {
-			const normalizedPath = this.removeFirstCharacter(path);
-			this.pathParts.push(normalizedPath);
-		} else {
-			this.pathParts.push(path);
-		}
+    if (path === undefined || path.trim().length === 0) {
+      return this;
+    }
 
-		return this;
-	}
+    if (path.trim() === "/") {
+      return this;
+    }
 
-	withQuery(query: QueryParams | undefined): UrlBuilder {
-		if (query === undefined) {
-			return this;
-		}
+    if (path.startsWith("/")) {
+      const normalizedPath = this.removeFirstCharacter(path);
+      this.pathParts.push(normalizedPath);
+    } else {
+      this.pathParts.push(path);
+    }
 
-		Object.keys(query).forEach((key) => {
-			const value = query[key];
+    return this;
+  }
 
-			if (value !== undefined) {
-				this.query.append(key, value);
-			}
-		});
+  withQuery(query: QueryParams | undefined): UrlBuilder {
+    this.logger.debug(`withQuery: ${query}`);
 
-		return this;
-	}
+    if (query === undefined) {
+      return this;
+    }
 
-	build(): string {
-		const absolutePath = this.pathParts.join('/');
-		const url = new URL(absolutePath);
-		url.search = this.query.toString();
-		return url.toString();
-	}
+    Object.keys(query).forEach((key) => {
+      const value = query[key];
 
-	private removeFirstCharacter(str: string): string {
-		if (str.length === 0) {
-			throw new Error('Input string cannot be empty.');
-		}
+      if (value !== undefined) {
+        this.query.append(key, value);
+      }
+    });
 
-		return str.slice(1);
-	}
+    return this;
+  }
+
+  build(): string {
+    const absolutePath = this.pathParts.join("/");
+    const url = new URL(absolutePath);
+    url.search = this.query.toString();
+    return url.toString();
+  }
+
+  private removeLastCharacter(str: string): string {
+    if (str.length === 0) {
+      throw new Error("Input string cannot be empty.");
+    }
+
+    return str.slice(0, -1);
+  }
+
+  private removeFirstCharacter(str: string): string {
+    if (str.length === 0) {
+      throw new Error("Input string cannot be empty.");
+    }
+
+    return str.slice(1);
+  }
 }
