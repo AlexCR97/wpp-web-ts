@@ -108,7 +108,3 @@ config.json
 
 # Temporary files
 temp
-
-# Whatsapp web
-.wwebjs_auth
-.wwebjs_cache
