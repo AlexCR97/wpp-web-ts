@@ -1,14 +1,15 @@
 import { ReadyHandler } from "@/common/whatsapp-web/events";
-import { MessageSender } from "@/application/services/MessageSender";
 import { inject, injectable } from "@tomasjs/core";
 import { TomasLogger } from "@tomasjs/logging";
 import cron from "node-cron";
+import { env } from "@/env";
+import { IMessageSender, messageSenderToken } from "@/application/services/messages";
 
 @injectable()
 export class MyReadyHandler implements ReadyHandler {
   private readonly logger = new TomasLogger(MyReadyHandler.name, "debug");
 
-  constructor(@inject(MessageSender) private readonly messageSender: MessageSender) {}
+  constructor(@inject(messageSenderToken) private readonly messageSender: IMessageSender) {}
 
   async onReady(): Promise<void> {
     this.logger.debug("ready");
@@ -18,14 +19,14 @@ export class MyReadyHandler implements ReadyHandler {
   private scheduleCronTask() {
     // TODO How to schedule with DI?
     cron.schedule(
-      "* * * * *", // TODO Make this configurable
+      env.schedule.cron,
       (now) => {
         this.logger.debug(`Cron job triggered at ${now.toString()}`);
         console.log("");
         this.messageSender.sendAsync();
       },
       {
-        runOnInit: true, // TODO Make this configurable
+        runOnInit: env.schedule.runOnInit,
       }
     );
   }

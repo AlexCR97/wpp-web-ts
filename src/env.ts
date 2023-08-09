@@ -4,6 +4,10 @@ export const env = {
   host: {
     path: path.resolve(),
   },
+  schedule: {
+    cron: "* * * * *", // Every 1 minute
+    runOnInit: true, // Run as soon as it is scheduled
+  },
   api: {
     // https://api-ninjas.com/api/quotes
     ninjaQuotes: {
@@ -12,7 +16,9 @@ export const env = {
     },
 
     // https://paperquotes.com/api-docs/
-    paperQuotes: {},
+    paperQuotes: {
+      url: "https://api.paperquotes.com/quotes",
+    },
 
     // https://github.com/lukePeavey/quotable
     quotable: {},
@@ -24,7 +30,7 @@ export const env = {
     zenQuotes: {},
   },
   wpp: {
-    chatId: "5218311027292@c.us", // My Love
-    // chatId: "5218311209294-1484455036@g.us", // Pikachus
+    // chatId: "5218311027292@c.us", // My Love
+    chatId: "5218311209294-1484455036@g.us", // Pikachus
   },
 } as const;

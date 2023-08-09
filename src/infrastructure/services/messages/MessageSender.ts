@@ -1,11 +1,12 @@
+import { IMessageSender } from "@/application/services/messages";
 import { env } from "@/env";
-import { NinjaQuotesApi, Quote } from "@/infrastructure/quotes-apis";
+import { NinjaQuotesApi, Quote } from "@/infrastructure/services/quotes-apis";
 import { inject, injectable } from "@tomasjs/core";
 import { TomasLogger } from "@tomasjs/logging";
 import { Client } from "whatsapp-web.js";
 
 @injectable()
-export class MessageSender {
+export class MessageSender implements IMessageSender {
   private readonly logger = new TomasLogger(MessageSender.name, "debug");
 
   constructor(
