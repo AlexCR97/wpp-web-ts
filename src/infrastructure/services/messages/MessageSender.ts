@@ -1,6 +1,6 @@
 import { IMessageSender } from "@/application/services/messages";
 import { env } from "@/env";
-import { NinjaQuotesApi, Quote } from "@/infrastructure/services/quotes-apis";
+import { QuotesApi } from "@/infrastructure/services/quotes-apis";
 import { inject, injectable } from "@tomasjs/core";
 import { TomasLogger } from "@tomasjs/logging";
 import { Client } from "whatsapp-web.js";
@@ -11,7 +11,7 @@ export class MessageSender implements IMessageSender {
 
   constructor(
     @inject(Client) private readonly client: Client,
-    @inject(NinjaQuotesApi) private readonly ninjaQuotesApi: NinjaQuotesApi
+    @inject(QuotesApi) private readonly quotesApi: QuotesApi
   ) {}
 
   private get chatId(): string {
@@ -25,7 +25,7 @@ export class MessageSender implements IMessageSender {
     console.log("");
 
     this.logger.debug("Fetching random quote from external api...");
-    const { author, quote } = await this.getRandomQuoteAsync();
+    const { author, quote } = await this.quotesApi.getRandomQuoteAsync();
     const message = `"${quote}" - ${author}`;
     this.logger.debug(`Fetched quote: ${message}`);
     console.log("");
@@ -34,14 +34,5 @@ export class MessageSender implements IMessageSender {
     await chat.sendMessage(message);
     this.logger.debug("Message sent!");
     console.log("");
-  }
-
-  private async getRandomQuoteAsync(): Promise<Quote> {
-    const response = await this.ninjaQuotesApi.getAsync({
-      limit: "1",
-      category: "love",
-    });
-
-    return response[0];
   }
 }

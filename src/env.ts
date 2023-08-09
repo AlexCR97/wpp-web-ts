@@ -17,7 +17,8 @@ export const env = {
 
     // https://paperquotes.com/api-docs/
     paperQuotes: {
-      url: "https://api.paperquotes.com/quotes",
+      url: "https://api.paperquotes.com/apiv1/quotes",
+      apiKey: "afe068faf3e2c909c221b13ea59ca110561a535a",
     },
 
     // https://github.com/lukePeavey/quotable

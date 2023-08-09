@@ -4,6 +4,7 @@ import { HttpClientError } from "./HttpClientError";
 import type { RequestInterceptor } from "./RequestInterceptor";
 import type { ResponseInterceptor } from "./ResponseInterceptor";
 import type { ResponseErrorInterceptor } from "./ResponseErrorInterceptor";
+import { TomasLogger } from "@tomasjs/logging";
 
 interface HttpRequestOptions {
   body?: object;
@@ -23,6 +24,7 @@ export class HttpClient {
   private readonly requestInterceptor?: RequestInterceptor;
   private readonly responseInterceptor?: ResponseInterceptor;
   private readonly responseErrorInterceptor?: ResponseErrorInterceptor;
+  private readonly logger = new TomasLogger(HttpClient.name, "error");
 
   constructor(options: HttpClientOptions) {
     this.baseUrl = new UrlBuilder(options.baseUrl).withPath(options.basePath).build();
@@ -65,6 +67,8 @@ export class HttpClient {
     options?: HttpRequestOptions
   ): Promise<TResponse> {
     const url = new UrlBuilder(this.baseUrl).withPath(resource).withQuery(options?.query).build();
+    this.logger.debug(`url: ${url}`);
+
     const request = await this.buildRequestAsync(method, options?.body);
     const response = await fetch(url, request);
 
