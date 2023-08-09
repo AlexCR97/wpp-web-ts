@@ -22,7 +22,9 @@ export const env = {
     },
 
     // https://github.com/lukePeavey/quotable
-    quotable: {},
+    quotable: {
+      url: "https://api.quotable.io",
+    },
 
     // https://theysaidso.com/api
     theySaidSo: {},
