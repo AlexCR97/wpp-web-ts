@@ -1,7 +1,13 @@
 import { messageSenderToken } from "@/application/services/messages";
 import { ContainerSetupFactory, ContainerSetupFunction } from "@tomasjs/core";
 import { MessageSender } from "./services/messages";
-import { NinjaQuotesApi, PaperQuotesApi, QuotableApi, QuotesApi } from "./services/quotes-apis";
+import {
+  NinjaQuotesApi,
+  PaperQuotesApi,
+  QuotableApi,
+  QuotesApi,
+  TheySaidSoApi,
+} from "./services/quotes-apis";
 import { useWhatsAppWeb } from "./services/wpp";
 
 export class UseInfrastructure implements ContainerSetupFactory {
@@ -14,6 +20,7 @@ export class UseInfrastructure implements ContainerSetupFactory {
       container.addClass(NinjaQuotesApi);
       container.addClass(PaperQuotesApi);
       container.addClass(QuotableApi);
+      container.addClass(TheySaidSoApi);
       container.addClass(QuotesApi);
 
       // wpp

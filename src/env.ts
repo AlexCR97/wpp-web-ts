@@ -27,7 +27,10 @@ export const env = {
     },
 
     // https://theysaidso.com/api
-    theySaidSo: {},
+    theySaidSo: {
+      url: "http://quotes.rest",
+      apiKey: "70QqqiQfEMmJY53IRdh4nUwr0RTaJzh9ZbuQYuDZ",
+    },
 
     // https://zenquotes.io/
     zenQuotes: {},

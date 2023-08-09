@@ -5,8 +5,9 @@ import { NinjaQuotesApi } from "./NinjaQuotesApi";
 import { PaperQuotesApi } from "./PaperQuotesApi";
 import { QuotableApi } from "./QuotableApi";
 import { Quote } from "./Quote";
+import { TheySaidSoApi } from "./TheySaidSoApi";
 
-const quoteApiProviders = ["NinjaQuotes", "PaperQuotes", "Quotable"] as const;
+const quoteApiProviders = ["NinjaQuotes", "PaperQuotes", "Quotable", "TheySaidSo"] as const;
 
 type QuoteApiProvider = (typeof quoteApiProviders)[number];
 
@@ -17,7 +18,8 @@ export class QuotesApi {
   constructor(
     @inject(NinjaQuotesApi) private readonly ninjaQuotesApi: NinjaQuotesApi,
     @inject(PaperQuotesApi) private readonly paperQuotesApi: PaperQuotesApi,
-    @inject(QuotableApi) private readonly quotableApi: QuotableApi
+    @inject(QuotableApi) private readonly quotableApi: QuotableApi,
+    @inject(TheySaidSoApi) private readonly theySaidSoApi: TheySaidSoApi
   ) {}
 
   async getRandomQuoteAsync(): Promise<Quote> {
@@ -37,11 +39,15 @@ export class QuotesApi {
       return await this.getFromQuotableApiAsync();
     }
 
+    if (apiProvider === "TheySaidSo") {
+      return await this.getFromTheySaidSoApiAsync();
+    }
+
     throw new Error(`Unknown QuoteApiProvider: "${apiProvider}"`);
   }
 
   private getRandomApiProvider(): QuoteApiProvider {
-    return "Quotable"; // TODO Remove this
+    return "TheySaidSo"; // TODO Remove this
     // const randomIndex = Math.floor(Math.random() * quoteApiProviders.length);
     // return quoteApiProviders[randomIndex];
   }
@@ -106,13 +112,26 @@ export class QuotesApi {
       tags: tags.join("|"),
     });
 
-    this.logger.debug(
-      `response from ${<QuoteApiProvider>"PaperQuotes"}: ${JSON.stringify(response)}`
-    );
+    this.logger.debug(`response from ${<QuoteApiProvider>"Quotable"}: ${JSON.stringify(response)}`);
 
     return {
       author: response[0].author,
       quote: response[0].content,
+    };
+  }
+
+  private async getFromTheySaidSoApiAsync(): Promise<Quote> {
+    const response = await this.theySaidSoApi.getQuoteOfTheDayAsync({
+      category: "love",
+    });
+
+    this.logger.debug(
+      `response from ${<QuoteApiProvider>"TheySaidSo"}: ${JSON.stringify(response)}`
+    );
+
+    return {
+      author: response.contents.quotes[0].author,
+      quote: response.contents.quotes[0].quote,
     };
   }
 }
