@@ -9,31 +9,21 @@ export const env = {
     runOnInit: true, // Run as soon as it is scheduled
   },
   api: {
-    // https://api-ninjas.com/api/quotes
     ninjaQuotes: {
       url: "https://api.api-ninjas.com/v1/quotes",
       apiKey: "Fp3J+JJcn3AUnapRuC0nQg==jH0IJYvIVHCXkW94",
     },
-
-    // https://paperquotes.com/api-docs/
     paperQuotes: {
       url: "https://api.paperquotes.com/apiv1/quotes",
       apiKey: "afe068faf3e2c909c221b13ea59ca110561a535a",
     },
-
-    // https://github.com/lukePeavey/quotable
     quotable: {
       url: "https://api.quotable.io",
     },
-
-    // https://theysaidso.com/api
     theySaidSo: {
       url: "http://quotes.rest",
       apiKey: "70QqqiQfEMmJY53IRdh4nUwr0RTaJzh9ZbuQYuDZ",
     },
-
-    // https://zenquotes.io/
-    zenQuotes: {},
   },
   wpp: {
     // chatId: "5218311027292@c.us", // My Love

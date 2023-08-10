@@ -17,10 +17,12 @@ export class UseInfrastructure implements ContainerSetupFactory {
       container.addClass(MessageSender, { token: messageSenderToken });
 
       // quotes-apis
-      container.addClass(NinjaQuotesApi);
-      container.addClass(PaperQuotesApi);
-      container.addClass(QuotableApi);
-      container.addClass(TheySaidSoApi);
+      container
+        .addClass(NinjaQuotesApi)
+        .addClass(PaperQuotesApi)
+        .addClass(QuotableApi)
+        .addClass(TheySaidSoApi);
+
       container.addClass(QuotesApi);
 
       // wpp
