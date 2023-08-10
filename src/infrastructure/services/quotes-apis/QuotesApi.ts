@@ -47,9 +47,8 @@ export class QuotesApi {
   }
 
   private getRandomApiProvider(): QuoteApiProvider {
-    return "TheySaidSo"; // TODO Remove this
-    // const randomIndex = Math.floor(Math.random() * quoteApiProviders.length);
-    // return quoteApiProviders[randomIndex];
+    const randomIndex = Math.floor(Math.random() * quoteApiProviders.length);
+    return quoteApiProviders[randomIndex];
   }
 
   private async getFromNinjaQuotesApiAsync(): Promise<Quote> {
