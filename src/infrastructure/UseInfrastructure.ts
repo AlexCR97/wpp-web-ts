@@ -1,5 +1,5 @@
 import { messageSenderToken } from "@/application/services/messages";
-import { ContainerSetupFactory, ContainerSetupFunction } from "@tomasjs/core";
+import { Container, ContainerSetupFactory, ContainerSetupFunction } from "@tomasjs/core";
 import { MessageSender } from "./services/messages";
 import {
   NinjaQuotesApi,
@@ -9,13 +9,13 @@ import {
   TheySaidSoApi,
 } from "./services/quotes-apis";
 import { useWhatsAppWeb } from "./services/wpp";
+import { env } from "@/env";
+import { UseSchedule } from "@/common/node-cron";
+import { MySchedule } from "@/application/services/schedules";
 
 export class UseInfrastructure implements ContainerSetupFactory {
   create(): ContainerSetupFunction {
     return async (container) => {
-      // messages
-      container.addClass(MessageSender, { token: messageSenderToken });
-
       // quotes-apis
       container
         .addClass(NinjaQuotesApi)
@@ -25,9 +25,30 @@ export class UseInfrastructure implements ContainerSetupFactory {
 
       container.addClass(QuotesApi);
 
-      // wpp
-      const setupFunction = useWhatsAppWeb.create();
-      await setupFunction(container);
+      if (env.entryPoint === "schedule") {
+        await this.setScheduleAsEntryPoint(container);
+      } else if (env.entryPoint === "wpp") {
+        await this.setWppAsEntryPointAsync(container);
+
+        // messages
+        container.addClass(MessageSender, { token: messageSenderToken });
+      }
     };
+  }
+
+  private async setScheduleAsEntryPoint(container: Container) {
+    const useSchedule = new UseSchedule({
+      cronExpression: env.schedule.cron,
+      schedule: MySchedule,
+      runOnInit: env.schedule.runOnInit,
+    });
+
+    const setupFunction = useSchedule.create();
+    await setupFunction(container);
+  }
+
+  private async setWppAsEntryPointAsync(container: Container) {
+    const setupFunction = useWhatsAppWeb.create();
+    await setupFunction(container);
   }
 }

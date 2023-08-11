@@ -4,6 +4,7 @@ export const env = {
   host: {
     path: path.resolve(),
   },
+  entryPoint: <"schedule" | "wpp">"schedule",
   schedule: {
     cron: "* * * * *", // Every 1 minute
     runOnInit: true, // Run as soon as it is scheduled
