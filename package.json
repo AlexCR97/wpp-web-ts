@@ -11,7 +11,7 @@
     "test": "jest",
     "compile-clean": "del dist /s /q",
     "compile-build": "tsc -b ./tsconfig.compile.json && tsc-alias",
-    "compile": "npm run compile-clean && npm run compile-build && node ./dist/SetupPackage.js",
+    "compile": "npm run compile-clean && npm run compile-build",
     "start": "node ./dist/main.js"
   },
   "devDependencies": {
