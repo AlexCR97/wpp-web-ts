@@ -1,0 +1,29 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE_NAME: wpp-web-ts
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get current date for image name
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m.%d.%H.%M.%S')" # Copied and adapted from: https://stackoverflow.com/questions/60942067/get-current-date-and-time-in-github-workflows
+
+      - name: Log into ACR
+        run: docker login -u ${{ secrets.AZURE_ACR_USER }} -p ${{ secrets.AZURE_ACR_PASSWORD }} ${{ secrets.AZURE_ACR_ENDPOINT }}
+
+      - name: Build docker image
+        run: docker build -t ${{ secrets.AZURE_ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ steps.date.outputs.date }} ./
+
+      - name: Push docker image
+        run: docker push ${{ secrets.AZURE_ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ steps.date.outputs.date }}
