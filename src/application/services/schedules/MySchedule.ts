@@ -1,7 +1,6 @@
 import { Schedule } from "@/common/node-cron";
 import { QuotesApi } from "@/infrastructure/services/quotes-apis";
-import { inject, injectable } from "@tomasjs/core";
-import { TomasLogger } from "@tomasjs/logging";
+import { TomasLogger, inject, injectable } from "@tomasjs/core";
 
 @injectable()
 export class MySchedule implements Schedule {

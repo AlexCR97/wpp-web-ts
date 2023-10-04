@@ -1,10 +1,9 @@
 import "reflect-metadata";
-import { ServiceContainerBuilder } from "@tomasjs/core";
-import { TomasLoggerFactory } from "@tomasjs/logging";
+import { ServiceContainerBuilder, TomasLogger } from "@tomasjs/core";
 import { UseInfrastructure } from "./infrastructure";
 
 async function main() {
-  const logger = new TomasLoggerFactory().create(main.name, "debug");
+  const logger = new TomasLogger("main", "debug");
 
   logger.debug("Building services...");
 

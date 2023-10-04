@@ -1,4 +1,4 @@
-import { TomasLogger } from "@tomasjs/logging";
+import { TomasLogger } from "@tomasjs/core";
 import type { QueryParams } from "./QueryParams";
 
 export class UrlBuilder {

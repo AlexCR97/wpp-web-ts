@@ -28,10 +28,8 @@ export class UseInfrastructure implements ContainerSetupFactory {
       if (env.entryPoint === "schedule") {
         await this.setScheduleAsEntryPoint(container);
       } else if (env.entryPoint === "wpp") {
-        await this.setWppAsEntryPointAsync(container);
-
-        // messages
         container.addClass(MessageSender, { token: messageSenderToken });
+        await this.setWppAsEntryPointAsync(container);
       }
     };
   }

@@ -1,6 +1,5 @@
 import { randomKey } from "@/common/random";
-import { inject, injectable } from "@tomasjs/core";
-import { TomasLogger } from "@tomasjs/logging";
+import { TomasLogger, inject, injectable } from "@tomasjs/core";
 import { NinjaQuotesApi } from "./NinjaQuotesApi";
 import { PaperQuotesApi } from "./PaperQuotesApi";
 import { QuotableApi } from "./QuotableApi";
@@ -39,6 +38,7 @@ export class QuotesApi {
       return await this.getFromQuotableApiAsync();
     }
 
+    // TODO This one throws 401
     if (apiProvider === "TheySaidSo") {
       return await this.getFromTheySaidSoApiAsync();
     }

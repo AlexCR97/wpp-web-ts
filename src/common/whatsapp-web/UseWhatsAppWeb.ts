@@ -3,8 +3,9 @@ import {
   Container,
   ContainerSetupFactory,
   ContainerSetupFunction,
+  Logger,
+  TomasLogger,
 } from "@tomasjs/core";
-import { Logger, TomasLogger } from "@tomasjs/logging";
 import { Client } from "whatsapp-web.js";
 import { UseWhatsAppWebOptions } from "./UseWhatsAppWebOptions";
 import { AuthenticatedHandler, QrHandler, ReadyHandler } from "./events";
@@ -25,7 +26,7 @@ export class UseWhatsAppWeb implements ContainerSetupFactory {
   }
 
   create(): ContainerSetupFunction {
-    return (container) => {
+    return async (container) => {
       this.logger.debug("Registering client...");
       container.addInstance(this.client, Client);
 
@@ -35,7 +36,7 @@ export class UseWhatsAppWeb implements ContainerSetupFactory {
       this.tryBindReadyHandler(container);
 
       this.logger.debug("Initializing client...");
-      this.client.initialize();
+      await this.client.initialize();
     };
   }
 
@@ -75,10 +76,6 @@ export class UseWhatsAppWeb implements ContainerSetupFactory {
     this.client.on("ready", async () => {
       const handler = container.get<ReadyHandler>(this.readyHandler!);
       await handler.onReady();
-      // this.logger.debug("ready");
-      // this.logger.debug("loading chat...");
-      // const myLoveChat = await this.client.getChatById("5218311027292@c.us");
-      // this.logger.debug("myLoveChat", myLoveChat);
     });
   }
 }

@@ -1,6 +1,5 @@
 import { QrHandler } from "@/common/whatsapp-web/events";
-import { injectable } from "@tomasjs/core";
-import { TomasLogger } from "@tomasjs/logging";
+import { TomasLogger, injectable } from "@tomasjs/core";
 import qrcode from "qrcode-terminal";
 
 @injectable()

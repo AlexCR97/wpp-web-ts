@@ -1,6 +1,5 @@
 import { ReadyHandler } from "@/common/whatsapp-web/events";
-import { inject, injectable } from "@tomasjs/core";
-import { TomasLogger } from "@tomasjs/logging";
+import { TomasLogger, inject, injectable } from "@tomasjs/core";
 import cron from "node-cron";
 import { env } from "@/env";
 import { IMessageSender, messageSenderToken } from "@/application/services/messages";

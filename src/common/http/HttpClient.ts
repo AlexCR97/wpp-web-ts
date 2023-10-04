@@ -4,7 +4,7 @@ import { HttpClientError } from "./HttpClientError";
 import type { RequestInterceptor } from "./RequestInterceptor";
 import type { ResponseInterceptor } from "./ResponseInterceptor";
 import type { ResponseErrorInterceptor } from "./ResponseErrorInterceptor";
-import { TomasLogger } from "@tomasjs/logging";
+import { TomasLogger } from "@tomasjs/core";
 
 interface HttpRequestOptions {
   body?: object;

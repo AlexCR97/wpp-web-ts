@@ -1,5 +1,9 @@
-import { ClassConstructor, ContainerSetupFactory, ContainerSetupFunction } from "@tomasjs/core";
-import { Logger } from "@tomasjs/logging";
+import {
+  ClassConstructor,
+  ContainerSetupFactory,
+  ContainerSetupFunction,
+  Logger,
+} from "@tomasjs/core";
 import cron from "node-cron";
 import { scheduleTokenFactory } from "./scheduleTokenFactory";
 import { Schedule } from "./Schedule";

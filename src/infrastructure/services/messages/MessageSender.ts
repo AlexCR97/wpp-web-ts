@@ -1,8 +1,7 @@
 import { IMessageSender } from "@/application/services/messages";
 import { env } from "@/env";
 import { QuotesApi } from "@/infrastructure/services/quotes-apis";
-import { inject, injectable } from "@tomasjs/core";
-import { TomasLogger } from "@tomasjs/logging";
+import { TomasLogger, inject, injectable } from "@tomasjs/core";
 import { Client } from "whatsapp-web.js";
 
 @injectable()
@@ -20,6 +19,7 @@ export class MessageSender implements IMessageSender {
 
   async sendAsync(): Promise<void> {
     this.logger.debug(`Loading chat with id "${this.chatId}" ...`);
+
     const chat = await this.client.getChatById(this.chatId);
     this.logger.debug(`Found chat: ${chat.name}`);
     console.log("");

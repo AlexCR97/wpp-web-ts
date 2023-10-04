@@ -1,7 +1,6 @@
 import { HttpClient, QueryParams } from "@/common/http";
 import { env } from "@/env";
-import { injectable } from "@tomasjs/core";
-import { TomasLogger } from "@tomasjs/logging";
+import { TomasLogger, injectable } from "@tomasjs/core";
 
 interface QuotableApiResponse {
   _id: string;

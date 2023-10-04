@@ -4,7 +4,7 @@ export const env = {
   host: {
     path: path.resolve(),
   },
-  entryPoint: <"schedule" | "wpp">"schedule",
+  entryPoint: <"schedule" | "wpp">"wpp",
   schedule: {
     cron: "* * * * *", // Every 1 minute
     runOnInit: true, // Run as soon as it is scheduled
@@ -28,6 +28,7 @@ export const env = {
   },
   wpp: {
     // chatId: "5218311027292@c.us", // My Love
-    chatId: "5218311209294-1484455036@g.us", // Pikachus
+    // chatId: "5218311209294-1484455036@g.us", // Pikachus
+    chatId: "5218311146563@c.us", // Me POCO F2 PRO
   },
 } as const;
