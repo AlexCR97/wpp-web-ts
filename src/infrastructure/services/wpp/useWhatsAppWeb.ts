@@ -7,7 +7,8 @@ export const useWhatsAppWeb = new UseWhatsAppWeb({
   client: new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-      args: ["--no-sandbox"],
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     },
   }),
   on: {
