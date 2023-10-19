@@ -5,6 +5,7 @@ import { PaperQuotesApi } from "./PaperQuotesApi";
 import { QuotableApi } from "./QuotableApi";
 import { Quote } from "./Quote";
 import { TheySaidSoApi } from "./TheySaidSoApi";
+import { ResilienceStrategy } from "@/common/resilify";
 
 const quoteApiProviders = ["NinjaQuotes", "PaperQuotes", "Quotable", "TheySaidSo"] as const;
 
@@ -22,6 +23,21 @@ export class QuotesApi {
   ) {}
 
   async getRandomQuoteAsync(): Promise<Quote> {
+    return await new ResilienceStrategy<Quote>()
+      .useRetry({
+        maxRetryAttempts: 3,
+        delayBetweenRetries: ({ attempt }) => (attempt + 1) * 1000,
+        beforeRetry: ({ attempt, err }) => {
+          const errorMessage: string = err instanceof Error ? err.message : `${err}`;
+          this.logger.error(
+            `Failed to get random quote on retry attempt #${attempt}: ${errorMessage}`
+          );
+        },
+      })
+      .execute(() => this.getRandomQuoteFromRandomApiProviderAsync());
+  }
+
+  async getRandomQuoteFromRandomApiProviderAsync(): Promise<Quote> {
     this.logger.debug("Getting random apiProvider...");
     const apiProvider = this.getRandomApiProvider();
     this.logger.debug(`Got apiProvider: ${apiProvider}`);

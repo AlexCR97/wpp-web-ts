@@ -18,21 +18,23 @@ export class MessageSender implements IMessageSender {
   }
 
   async sendAsync(): Promise<void> {
-    this.logger.debug(`Loading chat with id "${this.chatId}" ...`);
+    try {
+      this.logger.debug(`Loading chat with id "${this.chatId}" ...`);
 
-    const chat = await this.client.getChatById(this.chatId);
-    this.logger.debug(`Found chat: ${chat.name}`);
-    console.log("");
+      const chat = await this.client.getChatById(this.chatId);
+      this.logger.debug(`Found chat: ${chat.name}`);
 
-    this.logger.debug("Fetching random quote from external api...");
-    const { author, quote } = await this.quotesApi.getRandomQuoteAsync();
-    const message = `"${quote}" - ${author}`;
-    this.logger.debug(`Fetched quote: ${message}`);
-    console.log("");
+      this.logger.debug("Fetching random quote from external api...");
+      const { author, quote } = await this.quotesApi.getRandomQuoteAsync();
+      const message = `"${quote}" - ${author}`;
+      this.logger.debug(`Fetched quote: ${message}`);
 
-    this.logger.debug("Sending message...");
-    await chat.sendMessage(message);
-    this.logger.debug("Message sent!");
-    console.log("");
+      this.logger.debug("Sending message...");
+      await chat.sendMessage(message);
+      this.logger.debug("Message sent!");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : `${err}`;
+      this.logger.error(`Failed to send message: ${errorMessage}`);
+    }
   }
 }

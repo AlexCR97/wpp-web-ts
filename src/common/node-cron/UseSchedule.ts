@@ -66,7 +66,8 @@ export class UseSchedule implements ContainerSetupFactory {
             const schedule = container.get<Schedule>(scheduleToken);
             await schedule.run(now);
           } catch (err) {
-            console.log("err", err);
+            // TODO Log error
+            // console.log("err", err);
           }
         },
         this.options

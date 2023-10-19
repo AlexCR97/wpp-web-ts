@@ -21,7 +21,6 @@ export class MyReadyHandler implements ReadyHandler {
       env.schedule.cron,
       (now) => {
         this.logger.debug(`Cron job triggered at ${now.toString()}`);
-        console.log("");
         this.messageSender.sendAsync();
       },
       {
