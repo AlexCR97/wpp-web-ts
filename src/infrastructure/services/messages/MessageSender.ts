@@ -1,3 +1,4 @@
+import { ErrorOccurredEvent } from "@/application";
 import { QuoteSentEvent } from "@/application/QuoteSentEvent";
 import { IMessageSender } from "@/application/services/messages";
 import { getErrorMessage } from "@/common/errors";
@@ -41,6 +42,8 @@ export class MessageSender implements IMessageSender {
     } catch (err) {
       this.logger.error(getErrorMessage(err));
       console.log("err", err);
+
+      this.eventDispatcher.emit(new ErrorOccurredEvent(err, new Date()));
     }
   }
 }

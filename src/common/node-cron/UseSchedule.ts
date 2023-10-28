@@ -70,7 +70,7 @@ export class UseSchedule implements ContainerSetupFactory {
             await schedule.run(now);
           } catch (err) {
             const errorMessage = getErrorMessage(err);
-            this.logger.error(errorMessage);
+            this.logger.error(`Uncaught error while running schedule: ${errorMessage}`);
             console.log("err", err);
           }
         },

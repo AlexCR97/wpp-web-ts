@@ -10,9 +10,9 @@ export class BrevoEmailSender implements EmailSender {
     requestInterceptor: new BrevoApiRequestInterceptor(),
   });
 
-  async send(htmlContent: string): Promise<void> {
+  async send(subject: string, htmlContent: string): Promise<void> {
     await this.api.sendEmail({
-      subject: env.brevo.email.subject,
+      subject,
       sender: env.brevo.email.sender,
       to: [...env.brevo.email.to],
       htmlContent,

@@ -28,9 +28,8 @@ export const env = {
   },
   brevo: {
     apiKey:
-      "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",
+      "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",
     email: {
-      subject: "Quote has been sent!",
       sender: {
         name: "wpp-web-ts",
         email: "carp_97@outlook.com",

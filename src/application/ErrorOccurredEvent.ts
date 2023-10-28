@@ -1,21 +1,20 @@
 import { TomasLogger, inject } from "@tomasjs/core";
 import { EventHandler, eventHandler } from "@tomasjs/cqrs";
-import { Quote } from "./Quote";
 import { EmailSender, emailSenderToken } from "./EmailSender";
 import { ResilienceStrategy } from "@/common/resilify";
 import { getErrorMessage } from "@/common/errors";
 
-export class QuoteSentEvent {
-  constructor(readonly quote: Quote, readonly sentAt: Date) {}
+export class ErrorOccurredEvent {
+  constructor(readonly error: unknown, readonly occurredAt: Date) {}
 }
 
-@eventHandler(QuoteSentEvent)
-export class QuoteSentEventHandler implements EventHandler<QuoteSentEvent> {
-  private readonly logger = new TomasLogger(QuoteSentEventHandler.name, "debug");
+@eventHandler(ErrorOccurredEvent)
+export class ErrorOccurredEventHandler implements EventHandler<ErrorOccurredEvent> {
+  private readonly logger = new TomasLogger(ErrorOccurredEventHandler.name, "debug");
 
   constructor(@inject(emailSenderToken) private readonly emailSender: EmailSender) {}
 
-  async handle({ quote, sentAt }: QuoteSentEvent): Promise<void> {
+  async handle({ error, occurredAt }: ErrorOccurredEvent): Promise<void> {
     try {
       this.logger.info("Sending email...");
 
@@ -28,7 +27,7 @@ export class QuoteSentEventHandler implements EventHandler<QuoteSentEvent> {
             this.logger.error(`Failed to send email on retry attempt #${attempt}: ${errorMessage}`);
           },
         })
-        .execute(() => this.sendEmail(sentAt, quote));
+        .execute(() => this.sendEmail(error, occurredAt));
 
       this.logger.info("Email sent!");
     } catch (err) {
@@ -37,21 +36,29 @@ export class QuoteSentEventHandler implements EventHandler<QuoteSentEvent> {
     }
   }
 
-  private async sendEmail(sentAt: Date, quote: Quote) {
+  private async sendEmail(err: unknown, occurredAt: Date) {
+    const errString = this.getErrorString(err);
+
     await this.emailSender.send(
-      "A quote has been sent!",
+      "An error occurred!",
       /*html*/ `
       <html>
         <body>
           <p>Hello, Pablo Castillo!</p>
-          <p>The following quote was sent at ${sentAt.toString()}:</p>
-          <p>
-            ${quote.quote}<br>
-            ${quote.author}
-          </p>
+          <p>An error occurred at ${occurredAt.toString()}:</p>
+          <p>${getErrorMessage(err)}</p>
+          <p>${errString}</p>
         </body>
       </html>
     `
     );
+  }
+
+  private getErrorString(err: unknown): string {
+    try {
+      return JSON.stringify(err) ?? `${err}`;
+    } catch {
+      return `${err}`;
+    }
   }
 }
