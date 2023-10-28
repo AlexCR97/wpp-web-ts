@@ -1,7 +1,10 @@
+import { QuoteSentEvent } from "@/application/QuoteSentEvent";
 import { IMessageSender } from "@/application/services/messages";
+import { getErrorMessage } from "@/common/errors";
 import { env } from "@/env";
 import { QuotesApi } from "@/infrastructure/services/quotes-apis";
 import { TomasLogger, inject, injectable } from "@tomasjs/core";
+import { EventDispatcher } from "@tomasjs/cqrs";
 import { Client } from "whatsapp-web.js";
 
 @injectable()
@@ -10,6 +13,7 @@ export class MessageSender implements IMessageSender {
 
   constructor(
     @inject(Client) private readonly client: Client,
+    @inject(EventDispatcher) private readonly eventDispatcher: EventDispatcher,
     @inject(QuotesApi) private readonly quotesApi: QuotesApi
   ) {}
 
@@ -25,16 +29,18 @@ export class MessageSender implements IMessageSender {
       this.logger.debug(`Found chat: ${chat.name}`);
 
       this.logger.debug("Fetching random quote from external api...");
-      const { author, quote } = await this.quotesApi.getRandomQuoteAsync();
-      const message = `"${quote}" - ${author}`;
+      const quote = await this.quotesApi.getRandomQuoteAsync();
+      const message = `"${quote.quote}" - ${quote.author}`;
       this.logger.debug(`Fetched quote: ${message}`);
 
       this.logger.debug("Sending message...");
       await chat.sendMessage(message);
       this.logger.debug("Message sent!");
+
+      this.eventDispatcher.emit(new QuoteSentEvent(quote, new Date()));
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : `${err}`;
-      this.logger.error(`Failed to send message: ${errorMessage}`);
+      this.logger.error(getErrorMessage(err));
+      console.log("err", err);
     }
   }
 }

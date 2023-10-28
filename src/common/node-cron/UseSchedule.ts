@@ -3,11 +3,12 @@ import {
   ContainerSetupFactory,
   ContainerSetupFunction,
   Logger,
+  TomasLogger,
 } from "@tomasjs/core";
 import cron from "node-cron";
-import { scheduleTokenFactory } from "./scheduleTokenFactory";
 import { Schedule } from "./Schedule";
-import { scheduledTaskTokenFactory } from "./scheduledTaskTokenFactory";
+import { getErrorMessage } from "../errors";
+import { TokenBuilder } from "@tomasjs/core/tokens";
 
 interface UseScheduleOptions {
   cronExpression: string;
@@ -47,6 +48,8 @@ interface UseScheduleOptions {
 }
 
 export class UseSchedule implements ContainerSetupFactory {
+  private readonly logger = new TomasLogger(UseSchedule.name, "debug");
+
   constructor(private readonly options: UseScheduleOptions) {}
 
   private get scheduleId(): string {
@@ -66,8 +69,9 @@ export class UseSchedule implements ContainerSetupFactory {
             const schedule = container.get<Schedule>(scheduleToken);
             await schedule.run(now);
           } catch (err) {
-            // TODO Log error
-            // console.log("err", err);
+            const errorMessage = getErrorMessage(err);
+            this.logger.error(errorMessage);
+            console.log("err", err);
           }
         },
         this.options
@@ -76,4 +80,12 @@ export class UseSchedule implements ContainerSetupFactory {
       container.addInstance(task, scheduledTaskTokenFactory(this.scheduleId));
     };
   }
+}
+
+function scheduleTokenFactory(scheduleId: string): string {
+  return new TokenBuilder().with("node-cron").with("Schedule").with(scheduleId).build();
+}
+
+function scheduledTaskTokenFactory(scheduleId: string): string {
+  return new TokenBuilder().with("node-cron").with("ScheduledTask").with(scheduleId).build();
 }

@@ -26,6 +26,23 @@ export const env = {
       apiKey: "70QqqiQfEMmJY53IRdh4nUwr0RTaJzh9ZbuQYuDZ",
     },
   },
+  brevo: {
+    apiKey:
+      "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",
+    email: {
+      subject: "Quote has been sent!",
+      sender: {
+        name: "wpp-web-ts",
+        email: "carp_97@outlook.com",
+      },
+      to: [
+        {
+          name: "Pablo Castillo",
+          email: "carp_97@outlook.com",
+        },
+      ],
+    },
+  },
   wpp: {
     // chatId: "5218311027292@c.us", // My Love
     // chatId: "5218311209294-1484455036@g.us", // Pikachus

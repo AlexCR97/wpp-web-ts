@@ -3,9 +3,9 @@ import { TomasLogger, inject, injectable } from "@tomasjs/core";
 import { NinjaQuotesApi } from "./NinjaQuotesApi";
 import { PaperQuotesApi } from "./PaperQuotesApi";
 import { QuotableApi } from "./QuotableApi";
-import { Quote } from "./Quote";
 import { TheySaidSoApi } from "./TheySaidSoApi";
 import { ResilienceStrategy } from "@/common/resilify";
+import { Quote } from "@/application";
 
 const quoteApiProviders = ["NinjaQuotes", "PaperQuotes", "Quotable", "TheySaidSo"] as const;
 
